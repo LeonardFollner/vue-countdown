@@ -1,46 +1,55 @@
 <template>
-  <div>
-    <input class="title" type="text" :value="countDown.title" placeholder="Lorem Ipsum" @change="onTitleChanged">
-    <Datepicker input-class="hidden" ref="datePickerIsOpen" @selected="onDateChanged" value="date" />
+  <div class="tile">
+    <TitleInput :value="countDown.title" :onTitleChanged="onTitleChanged"/>
     <div class="timer" @click="openDatePicker">{{ timer }}</div>
+    <Datepicker
+      input-class="hidden"
+      wrapper-class="date-picker"
+      ref="datePickerIsOpen"
+      @selected="onDateChanged"
+      value="date"
+    />
   </div>
 </template>
 
 <script>
-import Vue from 'vue';
+import Vue from "vue";
 import moment from "moment";
 import Datepicker from "vuejs-datepicker";
+
+import TitleInput from "./TitleInput";
 
 export default {
   name: "CountDown",
   components: {
-    Datepicker
+    Datepicker,
+    TitleInput
   },
   props: {
     countDown: {
       title: String,
-      timestamp: Number,
-    },
-  },
-  data () {
-    return {
-      timer: '',
+      timestamp: Number
     }
+  },
+  data() {
+    return {
+      timer: ""
+    };
   },
   computed: {
     date: function() {
       return new Date(this.countDown.timestamp);
     }
   },
-  created () {
+  created() {
     this.setTimer();
-    setInterval(this.setTimer, 500)
+    setInterval(this.setTimer, 500);
   },
-  destroyed () {
-    clearInterval(this.setTimer)
+  destroyed() {
+    clearInterval(this.setTimer);
   },
   methods: {
-    setTimer () {
+    setTimer() {
       this.timer = moment(this.countDown.timestamp).fromNow();
     },
     openDatePicker: function() {
@@ -51,31 +60,67 @@ export default {
       this.countDown.timestamp = newTimestamp;
       this.$emit("changed", this.countDown);
     },
-    onTitleChanged: function(event) {
-      const newTitle = event.target.value;
+    onTitleChanged: function(newTitle) {
       this.countDown.title = newTitle;
       this.$emit("changed", this.countDown);
-    },
-    onClose: function() {
-      console.log('close');
-    },
-  },
+    }
+  }
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
 .hidden {
   display: none;
 }
+.tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  flex-grow: 1;
+  min-height: 20vh;
+  max-height: 100%;
+
+  border: 1px solid black;
+}
+@media (min-width: 500px) {
+  .tile {
+    width: 50%;
+  }
+}
+@media (min-width: 700px) {
+  .tile {
+    width: 33%;
+  }
+}
+@media (min-width: 1300px) {
+  .tile {
+    width: 25%;
+  }
+}
+@media (min-width: 1700px) {
+  .tile {
+    width: 20%;
+  }
+}
+.timer {
+  padding: 18px;
+}
+.date-picker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 9px;
+}
 </style>
 <style scoped>
-  .title {
-    border: none;
-    font-size: 3rem;
-  }
-  .timer {
-    font-size: 1.5rem;
-    cursor: pointer;
-  }
+.timer {
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+.timer:hover {
+  background-color: lightblue;
+}
 </style>
