@@ -84,6 +84,6 @@ input {
   cursor: text;
 }
 .input-wrapper:hover {
-  background-color: lightblue;
+  background-color: deepskyblue;
 }
 </style>

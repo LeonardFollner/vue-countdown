@@ -2,12 +2,13 @@
   <div id="app">
     <CountDown
       v-for="(countDown, index) in countDowns"
-      v-bind:countDown="countDown"
-      v-bind:key="countDown.timestamp"
+      :countDown="countDown"
+      :key="countDown.timestamp"
+      :onDelete="() => handleDelete(index)"
       @changed="handleCountDownChanged(index, $event)"
     />
     <div class="tile">
-      <div v-on:click="handleAddNewButtonClick" class="add-new-button">+</div>
+      <div @click="handleAddNewButtonClick" class="add-new-button">+</div>
     </div>
   </div>
 </template>
@@ -55,6 +56,13 @@ export default {
     },
     handleCountDownChanged: function(index, data) {
       this.countDowns[index] = data;
+      this.persist();
+    },
+    handleDelete: function(index) {
+      this.countDowns.splice(index, 1);
+      this.persist();
+    },
+    persist: function() {
       Cookies.set(cookieName, this.countDowns);
     }
   }
@@ -90,6 +98,6 @@ body {
   font-size: 6rem;
 }
 .add-new-button:hover {
-  background-color: lightblue;
+  background-color: deepskyblue;
 }
 </style>

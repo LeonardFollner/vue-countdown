@@ -1,5 +1,6 @@
 <template>
   <div class="tile">
+    <div class="delete" @click="onDelete">-</div>
     <TitleInput :value="countDown.title" :onTitleChanged="onTitleChanged"/>
     <div class="timer" @click="openDatePicker">{{ timer }}</div>
     <Datepicker
@@ -21,7 +22,7 @@ import Vue from "vue";
 import moment from "moment";
 import Datepicker from "vuejs-datepicker";
 
-import onClickOutside from '../directives/onClickOutside';
+import onClickOutside from "../directives/onClickOutside";
 import TitleInput from "./TitleInput";
 
 export default {
@@ -31,6 +32,7 @@ export default {
     TitleInput
   },
   props: {
+    onDelete: Function,
     countDown: {
       title: String,
       timestamp: Number
@@ -54,7 +56,7 @@ export default {
     clearInterval(this.setTimer);
   },
   directives: {
-    onClickOutside: onClickOutside,
+    onClickOutside: onClickOutside
   },
   methods: {
     setTimer() {
@@ -86,6 +88,7 @@ export default {
 }
 .tile {
   display: flex;
+  position: relative;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -117,9 +120,6 @@ export default {
     width: 20%;
   }
 }
-.timer {
-  padding: 18px;
-}
 .date-picker {
   display: flex;
   flex-direction: column;
@@ -129,10 +129,24 @@ export default {
 </style>
 <style scoped>
 .timer {
+  padding: 18px;
   font-size: 1.5rem;
   cursor: pointer;
 }
 .timer:hover {
-  background-color: lightblue;
+  background-color: deepskyblue;
+}
+.delete {
+  display: flex;
+  justify-content: center;
+  font-size: 2rem;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 2rem;
+  height: 2rem;
+}
+.delete:hover {
+  background-color: deepskyblue;
 }
 </style>
