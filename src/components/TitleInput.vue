@@ -1,19 +1,37 @@
 <template>
-  <div class="input-wrapper" @click="enterEditMode">
+  <div
+    class="input-wrapper"
+    @click="enterEditMode"
+    v-onClickOutside="{
+      handler: exitEditMode,
+      exclude: [
+        /*
+          * necessary because at the time onClickOutside handles the click
+          * .title is not mounted anymore
+          * and thus element.contains(.title) returns false
+          */
+        'title', 
+      ]
+    }"
+  >
     <div class="title" v-if="!inEditMode">{{value}}</div>
     <input
       v-if="inEditMode"
       type="text"
       :value="value"
       placeholder="Lorem Ipsum"
-      @change="onTitleChanged"
+      @keydown="onTitleChanged"
       @keyup.13="submit"
       autofocus
+      v-focus
     >
   </div>
 </template>
 
 <script>
+import focus from "../directives/focus";
+import onClickOutside from "../directives/onClickOutside";
+
 export default {
   name: "TitleInput",
   props: {
@@ -25,6 +43,10 @@ export default {
       inEditMode: false
     };
   },
+  directives: {
+    onClickOutside,
+    focus
+  },
   methods: {
     enterEditMode: function() {
       this.inEditMode = true;
@@ -33,8 +55,7 @@ export default {
       this.inEditMode = false;
     },
     submit: function(event) {
-      const newTitle = event.target.value;
-      this.onTitleChanged(newTitle);
+      this.onTitleChanged(event);
       this.exitEditMode();
     }
   }
@@ -54,6 +75,7 @@ input {
   width: 100%;
   border: none;
   background: none;
+  color: #2c3e50;
 }
 .input-wrapper {
   width: 100%;

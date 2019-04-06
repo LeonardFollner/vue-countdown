@@ -5,9 +5,13 @@
     <Datepicker
       input-class="hidden"
       wrapper-class="date-picker"
-      ref="datePickerIsOpen"
+      ref="datepicker"
       @selected="onDateChanged"
       value="date"
+      v-onClickOutside="{
+        handler: closeDatePicker,
+        exclude: ['timer']
+        }"
     />
   </div>
 </template>
@@ -17,6 +21,7 @@ import Vue from "vue";
 import moment from "moment";
 import Datepicker from "vuejs-datepicker";
 
+import onClickOutside from '../directives/onClickOutside';
 import TitleInput from "./TitleInput";
 
 export default {
@@ -48,19 +53,26 @@ export default {
   destroyed() {
     clearInterval(this.setTimer);
   },
+  directives: {
+    onClickOutside: onClickOutside,
+  },
   methods: {
     setTimer() {
       this.timer = moment(this.countDown.timestamp).fromNow();
     },
     openDatePicker: function() {
-      this.$refs.datePickerIsOpen.showCalendar();
+      this.$refs.datepicker.showCalendar();
+    },
+    closeDatePicker: function() {
+      this.$refs.datepicker.close();
     },
     onDateChanged: function(newDate) {
       const newTimestamp = newDate.getTime();
       this.countDown.timestamp = newTimestamp;
       this.$emit("changed", this.countDown);
     },
-    onTitleChanged: function(newTitle) {
+    onTitleChanged: function(event) {
+      const newTitle = event.target.value;
       this.countDown.title = newTitle;
       this.$emit("changed", this.countDown);
     }
