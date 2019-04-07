@@ -1,6 +1,9 @@
 <template>
   <div class="tile">
-    <div class="delete" @click="onDelete">-</div>
+    <div class="top-right">
+      <Share :countDown="countDown"/>
+      <div @click="onDelete">–</div>
+    </div>
     <TitleInput :value="countDown.title" :onTitleChanged="onTitleChanged"/>
     <div class="timer" @click="openDatePicker">{{ timer }}</div>
     <Datepicker
@@ -24,12 +27,14 @@ import Datepicker from "vuejs-datepicker";
 
 import onClickOutside from "../directives/onClickOutside";
 import TitleInput from "./TitleInput";
+import Share from "./Share";
 
 export default {
   name: "CountDown",
   components: {
     Datepicker,
-    TitleInput
+    TitleInput,
+    Share,
   },
   props: {
     onDelete: Function,
@@ -136,17 +141,17 @@ export default {
 .timer:hover {
   background-color: deepskyblue;
 }
-.delete {
+.top-right {
   display: flex;
   justify-content: center;
-  font-size: 2rem;
   position: absolute;
   top: 0px;
   right: 0px;
-  width: 2rem;
-  height: 2rem;
 }
-.delete:hover {
+.top-right div {
+  padding: 9px;
+}
+.top-right div:hover {
   background-color: deepskyblue;
 }
 </style>

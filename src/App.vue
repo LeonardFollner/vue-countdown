@@ -22,7 +22,7 @@ const cookieName = "countDowns";
 
 const timeOnSite = {
   timestamp: new Date().getTime(),
-  title: "You entered this site"
+  title: "Your first visit"
 };
 const newYearCountDown = {
   timestamp: moment()
@@ -40,14 +40,31 @@ export default {
     countDowns: []
   }),
   created() {
-    const countDownsFromCookie = Cookies.getJSON(cookieName);
-    if (!countDownsFromCookie) {
-      this.countDowns.push(timeOnSite, newYearCountDown);
-    } else {
-      this.countDowns = countDownsFromCookie;
-    }
+    this.initiateCountDowns();
+    this.addCountDownFromUrl();
+    this.persist();
   },
   methods: {
+    initiateCountDowns: function() {
+      const countDownsFromCookie = Cookies.getJSON(cookieName);
+      if (!countDownsFromCookie) {
+        this.countDowns.push(timeOnSite, newYearCountDown);
+      } else {
+        this.countDowns = countDownsFromCookie;
+      }
+    },
+    addCountDownFromUrl: function() {
+        const url = window.location.href;
+        const parameters = new URL(url).searchParams;
+        const timestamp = parameters.get('x');
+        const title = parameters.get('y');
+        if (timestamp && title && moment(Number(timestamp)).isValid()) {
+          this.countDowns.push({
+              timestamp: Number(timestamp),
+              title,
+          });
+        }
+    },
     handleAddNewButtonClick: function() {
       this.countDowns.push({
         timestamp: new Date().getTime(),
