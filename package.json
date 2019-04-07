@@ -10,6 +10,7 @@
   "dependencies": {
     "js-cookie": "2.2.0",
     "moment": "2.24.0",
+    "uuid": "3.3.2",
     "vue": "^2.5.22",
     "vuejs-datepicker": "1.5.4"
   },

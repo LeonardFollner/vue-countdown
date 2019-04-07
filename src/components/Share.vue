@@ -29,6 +29,7 @@ export default {
       const parameter = url.searchParams;
       parameter.set('x', this.countDown.timestamp);
       parameter.set('y', this.countDown.title);
+      parameter.set('z', this.countDown.uuid);
       return url.href;
     },
     onShareClick: function() {

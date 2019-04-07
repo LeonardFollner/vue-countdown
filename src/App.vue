@@ -3,7 +3,7 @@
     <CountDown
       v-for="(countDown, index) in countDowns"
       :countDown="countDown"
-      :key="countDown.timestamp"
+      :key="countDown.uuid"
       :onDelete="() => handleDelete(index)"
       @changed="handleCountDownChanged(index, $event)"
     />
@@ -16,15 +16,18 @@
 <script>
 import moment from "moment";
 import Cookies from "js-cookie";
+import uuidv4 from 'uuid';
 import CountDown from "./components/CountDown";
 
 const cookieName = "countDowns";
 
 const timeOnSite = {
+  uuid: uuidv4(),
   timestamp: new Date().getTime(),
   title: "Your first visit"
 };
 const newYearCountDown = {
+  uuid: uuidv4(),
   timestamp: moment()
     .endOf("year")
     .valueOf(),
@@ -39,6 +42,11 @@ export default {
   data: () => ({
     countDowns: []
   }),
+  computed: {
+    uuids: function() {
+      return this.countDowns.map(countDown => countDown.uuid);
+    },
+  },
   created() {
     this.initiateCountDowns();
     this.addCountDownFromUrl();
@@ -58,8 +66,11 @@ export default {
         const parameters = new URL(url).searchParams;
         const timestamp = parameters.get('x');
         const title = parameters.get('y');
-        if (timestamp && title && moment(Number(timestamp)).isValid()) {
+        const uuid = parameters.get('z');
+        const timerExists = this.uuids.indexOf(uuid) !== -1;
+        if (!timerExists && uuid && timestamp && title && moment(Number(timestamp)).isValid()) {
           this.countDowns.push({
+              uuid,
               timestamp: Number(timestamp),
               title,
           });
@@ -67,6 +78,7 @@ export default {
     },
     handleAddNewButtonClick: function() {
       this.countDowns.push({
+        uuid: uuidv4(),       
         timestamp: new Date().getTime(),
         title: "You added this Countdown"
       });
